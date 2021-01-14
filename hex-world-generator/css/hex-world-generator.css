@@ -1,0 +1,7 @@
+.worldmap {
+	max-height: 500px;
+	overflow: hidden;
+}
+.svg-map .wti {
+	pointer-events: none;
+}
