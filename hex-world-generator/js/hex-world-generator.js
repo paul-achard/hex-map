@@ -19,73 +19,7 @@ class world {
         this._container;
         this._draw_options = {};
 
-        /**
-         * Raw terrain data.
-         *
-         * @private
-         * @type {Object}
-         */
-        this._terrains = {
-            'none': {
-                color: '#64B4E1',
-            },
-            'ocean': {
-                color: '#64B5E1'
-            },
-            'grass': {
-                color: '#E6F59A'
-            },
-            'subtropical_desert': {
-                color: '#F2CD63'
-            },
-            'temperate_desert': {
-                color: '#F2CD63'
-            },
-            'taiga': {
-                color: '#E1C85A'
-            },
-            'shrubland': {
-                color: '#E1C859'
-            },
-            'beach': {
-                color: '#FFF899'
-            },
-            'scorched': {
-                color: '#E5F59A'
-            },
-            'bare': {
-                color: '#D1BE79'
-            },
-            'tundra': {
-                color: '#E5F59A'
-            },
-            'snow': {
-                color: '#DCDCE6'
-            },
-            'temperate_deciduous_forest': {
-                color: '#78AA46'
-            },
-            'temperate_rain_forest': {
-                color: '#78AA46'
-            },
-            'tropical_rain_forest': {
-                color: '#549D65'
-            },
-            'tropical_seasonal_forest': {
-                color: '#549D65'
-            },
-            'hills': {
-                color: '#E1C859'
-            },
-            'mountains': {
-                color: '#B37D1A'
-            },
-            'mountains_ice': {
-                color: '#DCDCE6'
-            }
-        };
-
-        /**
+         /**
          * Raw world data.
          *
          * @private
@@ -187,16 +121,6 @@ class world {
     }
 
     /**
-     * Export JSON-stringified world data.
-     *
-     * @public
-     * @returns {String}
-     */
-    export_json() {
-        return JSON.stringify(this.data());
-    }
-
-    /**
      * Export world data.
      * Just an alias for the data() method.
      *
@@ -254,22 +178,22 @@ class world {
             for (let y = 0; y < this.width; y++) {
                 let nx = x / this.height - 0.5;
                 let ny = y / this.width - 0.5;
-                let e = (1.00 * noise1(1 * nx, 1 * ny)
-                    + 0.77 * noise1(2 * nx, 2 * ny)
-                    + 0.33 * noise1(4 * nx, 4 * ny)
-                    + 0.00 * noise1(8 * nx, 8 * ny)
-                    + 0.00 * noise1(16 * nx, 16 * ny)
-                    + 0.00 * noise1(32 * nx, 32 * ny));
-                e /= (1.00 + 0.77 + 0.00 + 0.00 + 0.00 + 0.00);
+                let e = (1.00 * noise1( 1 * nx,  1 * ny)
+                    + 0.50 * noise1( 2 * nx,  2 * ny)
+                    + 0.25 * noise1( 4 * nx,  4 * ny)
+                    + 0.13 * noise1( 8 * nx,  8 * ny)
+                    + 0.06 * noise1(16 * nx, 16 * ny)
+                    + 0.03 * noise1(32 * nx, 32 * ny));
+                e /= (1.00+0.50+0.25+0.13+0.06+0.03);
                 e = Math.pow(e, this.erosion);
                 this._data[y][x].e = e;
-                let m = (1.00 * noise2(1 * nx, 1 * ny)
-                    + 0.75 * noise2(2 * nx, 2 * ny)
-                    + 0.33 * noise2(4 * nx, 4 * ny)
-                    + 0.33 * noise2(8 * nx, 8 * ny)
+                let m = (1.00 * noise2( 1 * nx,  1 * ny)
+                    + 0.75 * noise2( 2 * nx,  2 * ny)
+                    + 0.33 * noise2( 4 * nx,  4 * ny)
+                    + 0.33 * noise2( 8 * nx,  8 * ny)
                     + 0.33 * noise2(16 * nx, 16 * ny)
                     + 0.50 * noise2(32 * nx, 32 * ny));
-                m /= (1.00 + 0.75 + 0.33 + 0.33 + 0.33 + 0.50);
+                m /= (1.00+0.75+0.33+0.33+0.33+0.50);
                 this._data[y][x].m = m;
             }
         }
