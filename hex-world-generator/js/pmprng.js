@@ -89,18 +89,6 @@ PM_PRNG.prototype.gen = function(){
     //integer version 1, for max int 2^46 - 1 or larger.
     return this.seed = (this.seed * 16807) % 2147483647;
 
-    /**
-     * integer version 2, for max int 2^31 - 1 (slowest)
-     */
-    // var test = 16807 * (this.seed % 127773 >> 0) - 2836 * (this.seed / 127773 >> 0);
-    // return this.seed = (test > 0 ? test : test + 2147483647);
-
-    /**
-     * david g. carta's optimisation is 15% slower than integer version 1
-     */
-    // var hi = 16807 * (this.seed >> 16);
-    // var lo = 16807 * (this.seed & 0xFFFF) + ((hi & 0x7FFF) << 16) + (hi >> 15);
-    // return this.seed = (lo > 0x7FFFFFFF ? lo - 0x7FFFFFFF : lo);
 }
 
 

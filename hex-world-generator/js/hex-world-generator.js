@@ -480,10 +480,7 @@ world.prototype.draw = function (container, options) {
         options.opacity = 0.7;
     }
     if (typeof options.hex_size === 'undefined') {
-        options.hex_size = 24;
-    }
-    if (typeof options.show_terrain === 'undefined') {
-        options.show_terrain = true;
+        options.hex_size = 32;
     }
     if (typeof options.show_grid === 'undefined') {
         options.show_grid = true;
@@ -496,7 +493,6 @@ world.prototype.draw = function (container, options) {
         mode: options.mode,
         opacity: options.opacity,
         hex_size: options.hex_size,
-        show_terrain: options.show_terrain,
         show_grid: options.show_grid,
         assets_url: options.assets_url
     }
@@ -550,9 +546,7 @@ world.prototype.draw = function (container, options) {
             ctx.stroke();
             ctx.fillStyle = color;
             ctx.fill();
-            if (options.show_terrain === true) {
-                this.draw_on_hex(i, j, current_hex_x, current_hex_y, terrain, 'terrain');
-            }
+            this.draw_on_hex(i, j, current_hex_x, current_hex_y, terrain, 'terrain');
         }
         offset_column = !offset_column;
     }

@@ -4,16 +4,12 @@ document.addEventListener("DOMContentLoaded", function (event) {
     $('.world-erosion').val(0.54);
     $('.elevation-seed').val('');
     $('.moisture-seed').val('');
-    let clicked = false;
-    let clickY, clickX;
     $('body').on('click', '.generate', function () {
-        let width = 32;
-        let height = 32;
-        let hex_size = 24;
+        let width = 16;
+        let height = 16;
+        let hex_size = 42;
         let erosion = 0.3;
-        let draw_mode = "canvas";
         let show_grid = true;
-        let show_terrain = true;
         let opacity = 0.7;
         let map_name = "Test";
         let map_author = "Paul";
@@ -22,7 +18,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
         let seed_moisture;
         seed_elevation = '';
         seed_moisture = '';
-        if (width > 0 && hex_size > 0 && height > 0 ) {
+        if (width > 0 && hex_size > 0 && height > 0) {
             let new_world = new world({
                 width: 32,
                 height: 32,
@@ -34,7 +30,6 @@ document.addEventListener("DOMContentLoaded", function (event) {
                 opacity: opacity,
                 hex_size: hex_size,
                 show_grid: show_grid,
-                show_terrain: show_terrain,
                 assets_url: "../img/",
             });
             let data = new_world.export();
