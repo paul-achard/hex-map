@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
     $('body').on('click', '.generate', function () {
         let width = 16;
         let height = 16;
-        let hex_size = 42;
+        let hex_size = 32;
         let erosion = 0.3;
         let show_grid = true;
         let opacity = 0.7;

@@ -94,7 +94,7 @@ class world {
         this._data = [];
         this.width = typeof params.width !== 'undefined' ? params.width : 32;
         this.height = typeof params.height !== 'undefined' ? params.height : 32;
-        this.erosion = typeof params.erosion !== 'undefined' ? params.erosion : 0.54;
+        this.erosion = typeof params.erosion !== 'undefined' ? params.erosion : 0.20;
         this.seed_moisture = typeof params.seed_moisture !== 'undefined'
         && params.seed_moisture !== null ? params.seed_moisture : this.seed();
         this.seed_elevation = typeof params.seed_elevation !== 'undefined'
@@ -135,169 +135,6 @@ class world {
         return Math.random() * (2147483646 - 1) + 1;
     }
 
-    /**
-     * Generate terrain stats
-     *
-     * @public
-     * @returns {Object}
-     */
-    stats() {
-        let stats = {};
-        for (let terrain in this._terrains) {
-            stats[terrain] = 0;
-        }
-        for (let i = 0; i < this.width; ++i) {
-            for (let j = 0; j < this.height; ++j) {
-                let terrain = this.get_hex_terrain({
-                    x: i,
-                    y: j
-                });
-                stats[terrain]++;
-            }
-        }
-        return stats;
-    }
-
-    /**
-     * Get the terrain data as a string based on the elevation.
-     *
-     * @public
-     * @todo Un-hardcode the math.
-     * @param {Object} hex
-     * @returns {String}
-     */
-    get_hex_terrain(hex) {
-        let elevation = this._data[hex.y][hex.x].e;
-        let moisture = this._data[hex.y][hex.x].m;
-        if (elevation <= 0.1) {
-            return 'ocean';
-        } else if (elevation > 0.1 && elevation <= 0.15) {
-            return 'beach';
-        } else if (elevation > 0.15 && elevation <= 0.35) {
-            if (moisture <= 0.30) {
-                return 'subtropical_desert';
-            } else if (moisture > 0.30 && moisture <= 0.45) {
-                return 'grass';
-            } else if (moisture > 0.45 && moisture <= 0.66) {
-                return 'tropical_seasonal_forest';
-            } else {
-                return 'tropical_rain_forest';
-            }
-        } else if (elevation > 0.35 && elevation <= 0.75) {
-            if (moisture <= 0.20) {
-                return 'temperate_desert';
-            } else if (moisture > 0.20 && moisture <= 0.50) {
-                return 'grass';
-            } else if (moisture > 0.50 && moisture <= 0.83) {
-                return 'temperate_deciduous_forest';
-            } else {
-                return 'temperate_rain_forest';
-            }
-        } else if (elevation > 0.75 && elevation <= 0.8) {
-            if (moisture <= 0.33) {
-                return 'temperate_desert';
-            } else if (moisture > 0.33 && moisture <= 0.66) {
-                return 'shrubland';
-            } else {
-                return 'taiga';
-            }
-        } else if (elevation > 0.8 && elevation <= 0.85) {
-            return 'hills';
-        } else {
-            if (moisture >= 0.8) {
-                return 'mountains_ice';
-            } else {
-                return 'mountains';
-            }
-        }
-    }
-
-    /**
-     * Return the default terrains.
-     *
-     * @public
-     * @returns {Object}
-     */
-    terrains() {
-        return this._terrains;
-    }
-
-    /**
-     * Check if the specified hex is sea or ocean.
-     *
-     * @public
-     * @param {Object} hex
-     * @returns {Boolean}
-     */
-    hex_is_water(hex) {
-        if (this.get_hex_terrain(hex) === 'ocean') {
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * Return the moisture data for the specified hex.
-     *
-     * @public
-     * @param {Object} hex
-     * @returns {Number}
-     */
-    get_hex_moisture(hex) {
-        return this.get_hex(hex.x, hex.y).m;
-    }
-
-    /**
-     * Raise the elevation of the specified hex increasing it
-     * with the elevation parameter
-     *
-     * @public
-     * @param {Object} hex
-     * @param {Number} elevation
-     * @returns {Number}
-     */
-    raise_hex_elevation(hex, elevation) {
-        return this.get_hex(hex.x, hex.y).e + elevation;
-    }
-
-    /**
-     * Lower the elevation of the specified hex decreasing it
-     * with the elevation parameter
-     *
-     * @public
-     * @param {Object} hex
-     * @param {Number} elevation
-     * @returns {Number}
-     */
-    lower_hex_elevation(hex, elevation) {
-        return this.get_hex(hex.x, hex.y).e - elevation;
-    }
-
-    /**
-     * Raise the moisture of the specified hex increasing it
-     * with the moisture parameter
-     *
-     * @public
-     * @param {Object} hex
-     * @param {Number} moisture
-     * @returns {Number}
-     */
-    raise_hex_moisture(hex, moisture) {
-        return this.get_hex(hex.x, hex.y).m + moisture;
-    }
-
-    /**
-     * Lower the moisture of the specified hex decreasing it
-     * with the moisture parameter
-     *
-     * @public
-     * @param {Object} hex
-     * @param {Number} moisture
-     * @returns {Number}
-     */
-    lower_hex_moisture(hex, moisture) {
-        return this.get_hex(hex.x, hex.y).m - moisture;
-    }
 
     /**
      * Return the elevation data for the specified hex.
@@ -419,7 +256,7 @@ class world {
                 let ny = y / this.width - 0.5;
                 let e = (1.00 * noise1(1 * nx, 1 * ny)
                     + 0.77 * noise1(2 * nx, 2 * ny)
-                    + 0.00 * noise1(4 * nx, 4 * ny)
+                    + 0.33 * noise1(4 * nx, 4 * ny)
                     + 0.00 * noise1(8 * nx, 8 * ny)
                     + 0.00 * noise1(16 * nx, 16 * ny)
                     + 0.00 * noise1(32 * nx, 32 * ny));
@@ -437,6 +274,70 @@ class world {
             }
         }
         return this;
+    }
+
+    get_hex_terrain(hex) {
+        let elevation = this._data[hex.y][hex.x].e;
+        let moisture = this._data[hex.y][hex.x].m;
+        if (elevation <= 0.1) {
+            // Ocean
+            return 72;
+        } else if (elevation > 0.1 && elevation <= 0.2) {
+            // Mer
+            return 68;
+        } else if (elevation > 0.2 && elevation <= 0.5) {
+            if (moisture <= 0.20) {
+                // Desert
+                return 63;
+            } else if (moisture > 0.2 && moisture <= 0.4) {
+                // Plaine desertique
+                return 17;
+            } else if (moisture > 0.4 && moisture <= 0.6) {
+                // Plaine
+                return 0;
+            } else if (moisture > 0.6 && moisture <= 0.8) {
+                // Lac
+                return 13;
+            } else {
+                // neige
+                return 53;
+            }
+        } else if (elevation > 0.5 && elevation <= 0.7) {
+            if (moisture <= 0.20) {
+                // Rocher Desertique
+                return 64;
+            } else if (moisture > 0.2 && moisture <= 0.4) {
+                // Rocher desertique mais un peu moins desertique ta vu
+                return 41;
+            } else if (moisture > 0.4 && moisture <= 0.6) {
+                // Plaine rocheuse
+                return 8;
+            } else if (moisture > 0.6 && moisture <= 0.8) {
+                // Foret
+                return 5;
+            } else {
+                // neige rocher
+                return 56;
+            }
+        }
+        else {
+            if (moisture <= 0.20) {
+                // Montagne Desertique
+                return 66;
+            } else if (moisture > 0.2 && moisture <= 0.4) {
+                // Foret profonde
+                return 23;
+            } else if (moisture > 0.4 && moisture <= 0.6) {
+                // Montagne un peu moins montagne
+                return 93;
+            } else if (moisture > 0.6 && moisture <= 0.8) {
+                // Montagne
+                return 92;
+            } else {
+                // Montagne neige
+                return 82;
+            }
+        }
     }
 
     /**
@@ -496,57 +397,24 @@ world.prototype.draw = function (container, options) {
         show_grid: options.show_grid,
         assets_url: options.assets_url
     }
-    $(container).empty();
-    let terrains = this.terrains();
-    let scale = options.hex_size / 24;
-    let height = Math.sqrt(3) / 2 * options.hex_size;
-    let image_width = (1.5 * this.width + 0.5) * options.hex_size;
-    let image_height = (2 * this.height + 1) * height;
-    $(container).empty().append('<canvas class="canvas-map"></canvas>');
-    let canvas = $('.canvas-map').get(0);
     let current_hex_x;
     let current_hex_y;
     let offset_column = false;
-    let __height = Math.sqrt(3) * options.hex_size;
-    let __width = 2 * options.hex_size;
-    let __side = (3 / 2) * options.hex_size;
-    canvas.width = image_width;
-    canvas.height = image_height;
-    let ctx = canvas.getContext('2d');
-    ctx.fillStyle = terrains['none'].color;
-    ctx.fillRect(0, 0, image_width, image_height);
     for (let i = 0; i < this.width; ++i) {
         for (let j = 0; j < this.height; ++j) {
             if (!offset_column) {
-                current_hex_x = i * __side;
-                current_hex_y = j * __height;
+                current_hex_x = i * 22;
+                current_hex_y = j * 28;
             } else {
-                current_hex_x = i * __side;
-                current_hex_y = (j * __height) + (__height * 0.5);
+                current_hex_x = i * 22;
+                current_hex_y = (j * 28) + (28 * 0.5);
             }
-            let terrain = this.get_hex_terrain({
+            let terrainId = this.get_hex_terrain({
                 x: j,
                 y: i
             });
-            let color = terrains[terrain].color;
-            ctx.beginPath();
-            ctx.moveTo(current_hex_x + __width - __side, current_hex_y);
-            ctx.lineTo(current_hex_x + __side, current_hex_y);
-            ctx.lineTo(current_hex_x + __width, current_hex_y + (__height / 2));
-            ctx.lineTo(current_hex_x + __side, current_hex_y + __height);
-            ctx.lineTo(current_hex_x + __width - __side, current_hex_y + __height);
-            ctx.lineTo(current_hex_x, current_hex_y + (__height / 2));
-            ctx.closePath();
-            if (options.show_grid === true) {
-                ctx.strokeStyle = "#666";
-            } else {
-                ctx.strokeStyle = color;
-            }
-            ctx.lineWidth = 1;
-            ctx.stroke();
-            ctx.fillStyle = color;
-            ctx.fill();
-            this.draw_on_hex(i, j, current_hex_x, current_hex_y, terrain, 'terrain');
+            let hex = new Hex(current_hex_x, current_hex_y, terrainId)
+            hex.printHex()
         }
         offset_column = !offset_column;
     }
