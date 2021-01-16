@@ -16,10 +16,10 @@ class Hex {
         let coordX;
         let coordY;
         for (let i = 0; i < 10; i++) {
-            found = ID_TAB[i].find(element => element === this.id);
-            if (found !== undefined) {
+            found = ID_TAB[i].findIndex(element => element === this.id);
+            if (found !== -1) {
                 coordY = i;
-                coordX = this.id - i * 16;
+                coordX = found;
             }
         }
         return [coordX, coordY];
