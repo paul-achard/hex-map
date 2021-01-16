@@ -1,30 +1,9 @@
 class world {
 
-    /**
-     * Object constructor.
-     *
-     * @private
-     * @constructor
-     * @returns {Object}
-     * @param {Object} params
-     */
     constructor(params) {
 
-        /**
-         * Internal flags
-         *
-         * @private
-         */
         this._dirty = false;
-        this._container;
         this._draw_options = {};
-
-         /**
-         * Raw world data.
-         *
-         * @private
-         * @type {Array}
-         */
         this._data = [];
         this.width = typeof params.width !== 'undefined' ? params.width : 32;
         this.height = typeof params.height !== 'undefined' ? params.height : 32;
@@ -42,24 +21,6 @@ class world {
     }
 
     /**
-     * Get the properties of the world.
-     *
-     * @public
-     * @returns {Object}
-     */
-    props() {
-        return {
-            width: this.width,
-            height: this.height,
-            erosion: this.erosion,
-            seeds: {
-                elevation: this.seed_elevation,
-                moisture: this.seed_moisture
-            }
-        };
-    }
-
-    /**
      * Get a random number to seed the generator.
      *
      * @public
@@ -67,69 +28,6 @@ class world {
      */
     seed() {
         return Math.random() * (2147483646 - 1) + 1;
-    }
-
-
-    /**
-     * Return the elevation data for the specified hex.
-     *
-     * @public
-     * @param {Object} hex
-     * @returns {Number}
-     */
-    get_hex_elevation(hex) {
-        return this.get_hex(hex.x, hex.y).e;
-    }
-
-    /**
-     * Return the specified hex raw data.
-     *
-     * @public
-     * @param {Number} x
-     * @param {Number} y
-     * @returns {Object}
-     */
-    get_hex(x, y) {
-        return this._data[y][x];
-    }
-
-    /**
-     * Set the specified hex data.
-     *
-     * @public
-     * @param {Object} hex
-     * @param {String} key
-     * @param {String|Number|Array|Object} value
-     * @returns {Object}
-     */
-    set_hex(hex, key, value) {
-        return this._data[hex.y][hex.x][key] = value;
-    }
-
-    /**
-     * Get/set the world data array.
-     *
-     * @public
-     * @param {Array} value
-     * @returns {Array}
-     */
-    data(value) {
-        if (typeof value !== 'undefined') {
-            this._data = value;
-        }
-        return this._data;
-    }
-
-    /**
-     * Export world data.
-     * Just an alias for the data() method.
-     *
-     * @public
-     * @alias data
-     * @returns {String}
-     */
-    export() {
-        return this.data();
     }
 
     /**
@@ -212,19 +110,6 @@ class world {
     _to_point(source, dx, dy) {
         return Math.round(dx + source.x) + ',' + Math.round(dy + source.y);
     }
-
-    /**
-     * Processing callback.
-     *
-     * @public
-     * @param {Function} callback
-     * @returns {Object|Boolean|Number}
-     */
-    process(callback) {
-        callback.call(this);
-        this.redraw();
-        return this;
-    }
 }
 
 /**
@@ -237,18 +122,6 @@ class world {
  */
 world.prototype.draw = function (container, options) {
     options.mode = 'canvas';
-    if (typeof options.opacity === 'undefined') {
-        options.opacity = 0.7;
-    }
-    if (typeof options.hex_size === 'undefined') {
-        options.hex_size = 32;
-    }
-    if (typeof options.show_grid === 'undefined') {
-        options.show_grid = true;
-    }
-    if (typeof options.assets_url === 'undefined') {
-        options.assets_url = './';
-    }
     this._container = container;
     this._draw_options = {
         mode: options.mode,
