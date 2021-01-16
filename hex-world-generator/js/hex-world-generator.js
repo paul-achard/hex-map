@@ -200,70 +200,6 @@ class world {
         return this;
     }
 
-    get_hex_terrain(hex) {
-        let elevation = this._data[hex.y][hex.x].e;
-        let moisture = this._data[hex.y][hex.x].m;
-        if (elevation <= 0.1) {
-            // Ocean
-            return 72;
-        } else if (elevation > 0.1 && elevation <= 0.2) {
-            // Mer
-            return 68;
-        } else if (elevation > 0.2 && elevation <= 0.5) {
-            if (moisture <= 0.20) {
-                // Desert
-                return 63;
-            } else if (moisture > 0.2 && moisture <= 0.4) {
-                // Plaine desertique
-                return 17;
-            } else if (moisture > 0.4 && moisture <= 0.6) {
-                // Plaine
-                return 0;
-            } else if (moisture > 0.6 && moisture <= 0.8) {
-                // Lac
-                return 13;
-            } else {
-                // neige
-                return 53;
-            }
-        } else if (elevation > 0.5 && elevation <= 0.7) {
-            if (moisture <= 0.20) {
-                // Rocher Desertique
-                return 64;
-            } else if (moisture > 0.2 && moisture <= 0.4) {
-                // Rocher desertique mais un peu moins desertique ta vu
-                return 41;
-            } else if (moisture > 0.4 && moisture <= 0.6) {
-                // Plaine rocheuse
-                return 8;
-            } else if (moisture > 0.6 && moisture <= 0.8) {
-                // Foret
-                return 5;
-            } else {
-                // neige rocher
-                return 56;
-            }
-        }
-        else {
-            if (moisture <= 0.20) {
-                // Montagne Desertique
-                return 66;
-            } else if (moisture > 0.2 && moisture <= 0.4) {
-                // Foret profonde
-                return 23;
-            } else if (moisture > 0.4 && moisture <= 0.6) {
-                // Montagne un peu moins montagne
-                return 93;
-            } else if (moisture > 0.6 && moisture <= 0.8) {
-                // Montagne
-                return 92;
-            } else {
-                // Montagne neige
-                return 82;
-            }
-        }
-    }
-
     /**
      * Adjust a point.
      *
@@ -333,11 +269,8 @@ world.prototype.draw = function (container, options) {
                 current_hex_x = i * 22;
                 current_hex_y = (j * 28) + (28 * 0.5);
             }
-            let terrainId = this.get_hex_terrain({
-                x: j,
-                y: i
-            });
-            let hex = new Hex(current_hex_x, current_hex_y, terrainId)
+            let hex = new Hex(current_hex_x, current_hex_y);
+            hex.set_hex_terrain(this._data,i ,j)
             hex.printHex()
         }
         offset_column = !offset_column;

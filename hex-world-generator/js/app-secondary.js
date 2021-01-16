@@ -8,9 +8,8 @@ document.addEventListener("DOMContentLoaded", function (event) {
         let width = 16;
         let height = 16;
         let hex_size = 32;
-        let erosion = 0.3;
-        let show_grid = true;
-        let opacity = 0.7;
+        let erosion = 0.5;
+        let opacity = 0.5;
         let map_name = "Test";
         let map_author = "Paul";
         let map_description = "Test";
@@ -57,12 +56,4 @@ document.addEventListener("DOMContentLoaded", function (event) {
         }
         return false;
     });
-    $('.generate').trigger('click');
-    $('ul.tabs li').click(function () {
-        let tab_id = $(this).attr('data-tab');
-        $('ul.tabs li').removeClass('current');
-        $('.tab-content').removeClass('current');
-        $(this).addClass('current');
-        $("#" + tab_id).addClass('current');
-    });
-});
+   });

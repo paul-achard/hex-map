@@ -55,3 +55,4 @@ HEXTILES_IMAGE = new Image();
 HEXTILES_IMAGE.src = '../img/hextiles.png';
 CANVAS = document.getElementById('canvas-map')
 CTX = CANVAS.getContext('2d');
+CITY_ID_TAB = [97,98,99,100,101,102,103,104,105];
