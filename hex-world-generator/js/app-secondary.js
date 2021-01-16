@@ -18,9 +18,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
         }).draw('.worldmap', {
             mode: 'canvas',
             opacity: opacity,
-            hex_size: hex_size,
-            show_grid: show_grid,
-            assets_url: "../img/",
+            hex_size: hex_size
         });
     } else {
         alert('Incorrect parameters!');

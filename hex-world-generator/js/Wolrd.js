@@ -76,22 +76,22 @@ class world {
             for (let y = 0; y < this.width; y++) {
                 let nx = x / this.height - 0.5;
                 let ny = y / this.width - 0.5;
-                let e = (1.00 * noise1( 1 * nx,  1 * ny)
-                    + 0.50 * noise1( 2 * nx,  2 * ny)
-                    + 0.25 * noise1( 4 * nx,  4 * ny)
-                    + 0.13 * noise1( 8 * nx,  8 * ny)
+                let e = (1.00 * noise1(1 * nx, 1 * ny)
+                    + 0.50 * noise1(2 * nx, 2 * ny)
+                    + 0.25 * noise1(4 * nx, 4 * ny)
+                    + 0.13 * noise1(8 * nx, 8 * ny)
                     + 0.06 * noise1(16 * nx, 16 * ny)
                     + 0.03 * noise1(32 * nx, 32 * ny));
-                e /= (1.00+0.50+0.25+0.13+0.06+0.03);
+                e /= (1.00 + 0.50 + 0.25 + 0.13 + 0.06 + 0.03);
                 e = Math.pow(e, this.erosion);
                 this._data[y][x].e = e;
-                let m = (1.00 * noise2( 1 * nx,  1 * ny)
-                    + 0.75 * noise2( 2 * nx,  2 * ny)
-                    + 0.33 * noise2( 4 * nx,  4 * ny)
-                    + 0.33 * noise2( 8 * nx,  8 * ny)
+                let m = (1.00 * noise2(1 * nx, 1 * ny)
+                    + 0.75 * noise2(2 * nx, 2 * ny)
+                    + 0.33 * noise2(4 * nx, 4 * ny)
+                    + 0.33 * noise2(8 * nx, 8 * ny)
                     + 0.33 * noise2(16 * nx, 16 * ny)
                     + 0.50 * noise2(32 * nx, 32 * ny));
-                m /= (1.00+0.75+0.33+0.33+0.33+0.50);
+                m /= (1.00 + 0.75 + 0.33 + 0.33 + 0.33 + 0.50);
                 this._data[y][x].m = m;
             }
         }
@@ -143,7 +143,7 @@ world.prototype.draw = function (container, options) {
                 current_hex_y = (j * 28) + (28 * 0.5);
             }
             let hex = new Hex(current_hex_x, current_hex_y);
-            hex.set_hex_terrain(this._data,i ,j)
+            hex.set_hex_terrain(this._data, i, j)
             hex.printHex()
         }
         offset_column = !offset_column;

@@ -1,5 +1,6 @@
 function initTabHex(){
     let tab = [];
+    let indice = 0;
     for (let i=0; i<10; i++){
         let tabLigne = [];
         for (let j=0; j<16; j++){
@@ -38,11 +39,13 @@ function initTabHex(){
                     j = 16;
                 }
                 else {
-                    tabLigne.push(i*16+j);
+                    tabLigne.push(indice);
+                    indice ++;
                 }
             }
             else {
-                tabLigne.push(i*16+j);
+                tabLigne.push(indice);
+                indice ++;
             }
         }
         tab.push(tabLigne);
