@@ -78,20 +78,14 @@ class world {
                 let ny = y / this.width - 0.5;
                 let e = (1.00 * noise1(1 * nx, 1 * ny)
                     + 0.50 * noise1(2 * nx, 2 * ny)
-                    + 0.25 * noise1(4 * nx, 4 * ny)
-                    + 0.13 * noise1(8 * nx, 8 * ny)
-                    + 0.06 * noise1(16 * nx, 16 * ny)
-                    + 0.03 * noise1(32 * nx, 32 * ny));
-                e /= (1.00 + 0.50 + 0.25 + 0.13 + 0.06 + 0.03);
+                    + 0.25 * noise1(4 * nx, 4 * ny));
+                e /= (1.00 + 0.50 + 0.25);
                 e = Math.pow(e, this.erosion);
                 this._data[y][x].e = e;
                 let m = (1.00 * noise2(1 * nx, 1 * ny)
-                    + 0.75 * noise2(2 * nx, 2 * ny)
-                    + 0.33 * noise2(4 * nx, 4 * ny)
-                    + 0.33 * noise2(8 * nx, 8 * ny)
-                    + 0.33 * noise2(16 * nx, 16 * ny)
-                    + 0.50 * noise2(32 * nx, 32 * ny));
-                m /= (1.00 + 0.75 + 0.33 + 0.33 + 0.33 + 0.50);
+                    + 0.50 * noise2(2 * nx, 2 * ny)
+                    + 0.25 * noise2(4 * nx, 4 * ny));
+                m /= (1+ 0.5 + 0.25);
                 this._data[y][x].m = m;
             }
         }
@@ -120,26 +114,18 @@ class world {
  * @param {Object} options
  * @returns {world}
  */
-world.prototype.draw = function (container, options) {
-    options.mode = 'canvas';
+world.prototype.draw = function (container) {
     this._container = container;
-    this._draw_options = {
-        mode: options.mode,
-        opacity: options.opacity,
-        hex_size: options.hex_size,
-        show_grid: options.show_grid,
-        assets_url: options.assets_url
-    }
     let current_hex_x;
     let current_hex_y;
     let offset_column = false;
     for (let i = 0; i < this.width; ++i) {
         for (let j = 0; j < this.height; ++j) {
             if (!offset_column) {
-                current_hex_x = i * 22;
+                current_hex_x = i * 24;
                 current_hex_y = j * 28;
             } else {
-                current_hex_x = i * 22;
+                current_hex_x = i * 24;
                 current_hex_y = (j * 28) + (28 * 0.5);
             }
             let hex = new Hex(current_hex_x, current_hex_y);
@@ -149,22 +135,6 @@ world.prototype.draw = function (container, options) {
         offset_column = !offset_column;
     }
     this._dirty = false;
-    return this;
-}
-
-/**
- * Redraw method.
- *
- * @public
- * @returns {world}
- */
-world.prototype.redraw = function () {
-    if (this._dirty === true) {
-        this.draw(this._container, this._draw_options);
-        if (this.on_redraw instanceof Function) {
-            this.on_redraw.call(this);
-        }
-    }
     return this;
 }
 
