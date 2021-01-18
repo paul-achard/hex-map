@@ -118,7 +118,9 @@ world.prototype.draw = function (container) {
     let current_hex_x;
     let current_hex_y;
     let offset_column = false;
+    let tabHex = [];
     for (let i = 0; i < this.width; ++i) {
+        let tabLigne = [];
         for (let j = 0; j < this.height; ++j) {
             if (!offset_column) {
                 current_hex_x = i * 24;
@@ -128,10 +130,25 @@ world.prototype.draw = function (container) {
                 current_hex_y = (j * 28) + (28 * 0.5);
             }
             let hex = new Hex(current_hex_x, current_hex_y);
-            hex.set_hex_terrain(this._data, i, j)
-            hex.printHex()
+            hex.set_hex_terrain(this._data, i, j);
+            tabLigne.push(hex);
+            //hex.printHex();
         }
+        tabHex.push(tabLigne);
         offset_column = !offset_column;
+    }
+    console.log(tabHex);
+    for (let i=0; i<this.height; i++){
+        let j = 0;
+        while (j < 50){
+            tabHex[j][i].printHex();
+            j = j+2;
+        }
+        j = 1;
+        while (j < 50){
+            tabHex[j][i].printHex();
+            j = j+2;
+        }
     }
     return this;
 }
