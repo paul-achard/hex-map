@@ -1,13 +1,94 @@
 class Hex {
-    constructor(x, y) {
-        this.x = x;
-        this.y = y;
+    constructor(q, r, s) {
+        this.q = q;
+        this.r = r;
+        this.s = s;
+        if (Math.round(q + r + s) !== 0) {
+            throw "q + r + s must be 0";
+        }
         if (Math.random() < 0.01) {
             this.cityName = this.getCityName();
         } else {
             this.cityName = null;
         }
         this.id = null;
+    }
+
+    toString() {
+        return "q:" + this.q + "r:" + this.r + "s:" + this.s;
+    }
+
+    add(b) {
+        return new Hex(this.q + b.q, this.r + b.r, this.s + b.s);
+    }
+
+    subtract(b) {
+        return new Hex(this.q - b.q, this.r - b.r, this.s - b.s);
+    }
+
+    scale(k) {
+        return new Hex(this.q * k, this.r * k, this.s * k);
+    }
+
+    rotateLeft() {
+        return new Hex(-this.s, -this.q, -this.r);
+    }
+
+    rotateRight() {
+        return new Hex(-this.r, -this.s, -this.q);
+    }
+
+    static direction(direction) {
+        return Hex.directions[direction];
+    }
+
+    neighbor(direction) {
+        return this.add(Hex.direction(direction));
+    }
+
+    diagonalNeighbor(direction) {
+        return this.add(Hex.diagonals[direction]);
+    }
+
+    len() {
+        return (Math.abs(this.q) + Math.abs(this.r) + Math.abs(this.s)) / 2;
+    }
+
+    distance(b) {
+        return this.subtract(b).len();
+    }
+
+    round() {
+        var qi = Math.round(this.q);
+        var ri = Math.round(this.r);
+        var si = Math.round(this.s);
+        var q_diff = Math.abs(qi - this.q);
+        var r_diff = Math.abs(ri - this.r);
+        var s_diff = Math.abs(si - this.s);
+        if (q_diff > r_diff && q_diff > s_diff) {
+            qi = -ri - si;
+        } else if (r_diff > s_diff) {
+            ri = -qi - si;
+        } else {
+            si = -qi - ri;
+        }
+        return new Hex(qi, ri, si);
+    }
+
+    lerp(b, t) {
+        return new Hex(this.q * (1.0 - t) + b.q * t, this.r * (1.0 - t) + b.r * t, this.s * (1.0 - t) + b.s * t);
+    }
+
+    linedraw(b) {
+        var N = this.distance(b);
+        var a_nudge = new Hex(this.q + 1e-06, this.r + 1e-06, this.s - 2e-06);
+        var b_nudge = new Hex(b.q + 1e-06, b.r + 1e-06, b.s - 2e-06);
+        var results = [];
+        var step = 1.0 / Math.max(N, 1);
+        for (var i = 0; i <= N; i++) {
+            results.push(a_nudge.lerp(b_nudge, step * i).round());
+        }
+        return results;
     }
 
     //Find return undefined quand il ne trouve pas la valeur
@@ -138,12 +219,12 @@ class Hex {
         }
     }
 
-    printHex() {
-        let coord = this.getCoord(this.id);
-        CTX.drawImage(HEXTILES_IMAGE, coord[0] * 32, coord[1] * 48, 32, 48, this.x, this.y, 32, 48);
+    printHex(coordCanvas) {
+        let coordHexTile = this.getCoord(this.id);
+        CTX.drawImage(HEXTILES_IMAGE, coordHexTile[0] * 32, coordHexTile[1] * 48, 32, 48, coordCanvas.x, coordCanvas.y, 32, 48);
         if (CITY_ID_TAB.includes(this.id)) {
             CTX.font = "20px Arial";
-            CTX.fillText(this.cityName, this.x, this.y);
+            CTX.fillText(this.cityName, coordCanvas.x, coordCanvas.y);
         }
     }
 
