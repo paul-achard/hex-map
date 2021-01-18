@@ -53,7 +53,6 @@ function initTabHex(){
     return tab;
 }
 ID_TAB = initTabHex();
-console.log(ID_TAB);
 HEXTILES_IMAGE = new Image();
 HEXTILES_IMAGE.src = '../img/hextiles.png';
 CANVAS = document.getElementById('canvas-map')

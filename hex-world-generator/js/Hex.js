@@ -105,6 +105,7 @@ class Hex {
         }
         return [coordX, coordY];
     }
+
     getRandomHex(tab){
         let index= Math.floor(Math.random() * Math.floor(tab.length));
         return tab[index];
@@ -236,5 +237,19 @@ class Hex {
         return res;
 
     }
+}
+
+
+var cube_directions = [
+    new Hex(+1, -1, 0), new Hex(+1, 0, -1), new Hex(0, +1, -1),
+    new Hex(-1, +1, 0), new Hex(-1, 0, +1), new Hex(0, -1, +1),
+]
+
+function cube_direction(direction){
+    return cube_directions[direction]
+}
+
+function cube_neighbor(hex, direction){
+    return hex.add(cube_direction(direction))
 }
 

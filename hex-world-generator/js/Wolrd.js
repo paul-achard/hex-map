@@ -82,6 +82,51 @@ class world {
         return this;
     }
 
+    breadthFirstSearch(start, objective) {
+        let cost_so_far = {};
+        cost_so_far[start] = 0;
+        let came_from = {};
+        came_from[start] = null;
+        let fringes = [[start]];
+        for (let k = 0; fringes[k].length > 0; k++) {
+            fringes[k + 1] = [];
+            for (let hex of fringes[k]) {
+                for (let dir = 0; dir < 6; dir++) {
+                    let neighbor = cube_neighbor(hex, dir);
+                    if (cost_so_far[neighbor] === undefined) {
+                        cost_so_far[neighbor] = k + 1;
+                        came_from[neighbor] = hex;
+                        fringes[k + 1].push(neighbor);
+                        if (neighbor.toString() === objective.toString()) {
+                            return {cost_so_far, came_from};
+                        }
+                    }
+                }
+            }
+        }
+        return {cost_so_far, came_from};
+    }
+
+    drawRoads(dict) {
+        // On cherche toutes les villes
+        let cityTab = [];
+        for (const id in dict) {
+            if (CITY_ID_TAB.includes(dict[id].id)) {
+                cityTab.push(dict[id]);
+            }
+        }
+        cityTab.forEach(cityTile => {
+            cityTab.forEach(cityTile2 => {
+                if (cityTile !== cityTile2) {
+                    let test = this.breadthFirstSearch(cityTile, cityTile2);
+                    console.log(test);
+                }
+
+            })
+
+        })
+    }
+
     draw() {
         let dict = {};
         for (let i = 0; i < this.width; ++i) {
@@ -91,25 +136,27 @@ class world {
                 offset_coord.y = j - Math.floor(this.height / 2);
                 let hex = OffsetCoord.qoffsetToCube(OffsetCoord.EVEN, {row: offset_coord.x, col: offset_coord.y});
                 hex.set_hex_terrain(this._data, i, j);
-                dict[hex.toString()] = {"hex": hex, "i": i, "j": j};
+                dict["i:" + i + "j:" + j] = hex;
             }
         }
-        for (const id in dict) {
-            let coordCanvas = LAYOUT.hexToPixel(dict[id]["hex"]);
-            dict[id]["hex"].printHex(coordCanvas);
-        }
-        /*for (let i = 0; i < this.height; i++) {
+
+        for (let i = 0; i < this.height; i++) {
             let j = 0;
-            while (j < 50) {
-                tabHex[j][i].printHex();
+            while (j < this.width) {
+                let hex = dict["i:" + i + "j:" + j];
+                let coordCanvas = LAYOUT.hexToPixel(hex)
+                hex.printHex(coordCanvas);
                 j = j + 2;
             }
             j = 1;
-            while (j < 50) {
-                tabHex[j][i].printHex();
+            while (j < this.width) {
+                let hex = dict["i:" + i + "j:" + j];
+                let coordCanvas = LAYOUT.hexToPixel(hex)
+                hex.printHex(coordCanvas);
                 j = j + 2;
             }
-        }*/
+        }
+        this.drawRoads(dict);
         return this;
     }
 }
