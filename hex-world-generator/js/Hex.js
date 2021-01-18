@@ -24,10 +24,30 @@ class Hex {
         }
         return [coordX, coordY];
     }
+    getRandomHex(tab){
+        let index= Math.floor(Math.random() * Math.floor(tab.length));
+        return tab[index];
+    }
 
     set_hex_terrain(noiseData, i, j) {
+
         let elevation = noiseData[i][j].e;
         let moisture = noiseData[i][j].m;
+
+        let tabDesert =[61,62,67];
+        let tabDesertMontagne = [65,66];
+        let tabPlaineDesertique = [16,17,18,24,26];
+        let tabPlaine = [1,2,7];
+        let tabPlaineRocheuse = [8,9,10,11];
+        let tabLac = [12,13,19];
+        let tabNeige = [48,49,51,52,54,55,56,57];
+        let tabNeigeRocher = [56,57,82];
+        let tabRocherDesertiqueMoins = [32,33,34,35,36,37,38,39,40,41];
+        let tabForet = [3,4,5,6];
+        let tabForetProfonde = [23,25];
+        let tabMontagneBasse = [93,94,50];
+        let tabRocherDesertique = [63,64];
+
         if (elevation <= 0.35) {
             // Ocean
             this.id = 72;
@@ -40,28 +60,28 @@ class Hex {
                 if (this.cityName != null) {
                     this.id = 103;
                 } else {
-                    this.id = 63;
+                    this.id = this.getRandomHex(tabDesert) ;//63
                 }
             } else if (moisture > 0.2 && moisture <= 0.4) {
                 // Plaine desertique
-                this.id = 17;
+                this.id = this.getRandomHex(tabPlaineDesertique);//17
             } else if (moisture > 0.4 && moisture <= 0.6) {
                 // Plaine
                 if (this.cityName != null) {
                     // Ville dans plaine
                     this.id = 97;
                 } else {
-                    this.id = 1;
+                    this.id = this.getRandomHex(tabPlaine);
                 }
             } else if (moisture > 0.6 && moisture <= 0.8) {
                 // Lac
-                this.id = 13;
+                this.id = this.getRandomHex(tabLac);//19
             } else {
                 // neige
                 if (this.cityName != null) {
                     this.id = 100;
                 } else {
-                    this.id = 53;
+                    this.id = this.getRandomHex(tabNeige);//53
                 }
             }
         } else if (elevation > 0.5 && elevation <= 0.7) {
@@ -70,47 +90,44 @@ class Hex {
                 if (this.cityName != null) {
                     this.id = 104;
                 } else {
-                    this.id = 64;
+                    this.id = this.getRandomHex(tabRocherDesertique);
                 }
             } else if (moisture > 0.2 && moisture <= 0.4) {
                 // Rocher desertique mais un peu moins desertique ta vu
                 if (this.cityName != null) {
-                    this.id = 99;
+                    this.id = 103;
                 } else {
-                    this.id = 41;
+                    this.id = this.getRandomHex(tabRocherDesertiqueMoins); //41
                 }
             } else if (moisture > 0.4 && moisture <= 0.6) {
                 // Plaine rocheuse
-                this.id = 8;
+                this.id = this.getRandomHex(tabPlaineRocheuse); //8
             } else if (moisture > 0.6 && moisture <= 0.8) {
                 // Foret
                 if (this.cityName != null) {
-                    this.id = 98;
+                    this.id = 97;
                 } else {
-                    this.id = 5;
+                    this.id = this.getRandomHex(tabForet); //5
                 }
             } else {
                 // neige rocher
                 if (this.cityName != null) {
                     this.id = 101;
                 } else {
-                    this.id = 56;
+                    this.id = this.getRandomHex(tabNeigeRocher); //56
                 }
             }
         } else {
             if (moisture <= 0.20) {
                 // Montagne Desertique
-                this.id = 66;
+                this.id = this.getRandomHex(tabDesertMontagne); //66
             } else if (moisture > 0.2 && moisture <= 0.4) {
                 // Foret profonde
-                this.id = 23;
-            } else if (moisture > 0.4 && moisture <= 0.6) {
+                this.id = this.getRandomHex(tabForetProfonde);//23
+            } else if (moisture > 0.4 && moisture <= 0.8) {
                 // Montagne un peu moins montagne
-                this.id = 93;
-            } else if (moisture > 0.6 && moisture <= 0.8) {
-                // Montagne
-                this.id = 92;
-            } else {
+                this.id = this.getRandomHex(tabMontagneBasse); //93
+            }else {
                 // Montagne neige
                 if (this.cityName != null) {
                     this.id = 102;
