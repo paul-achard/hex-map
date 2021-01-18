@@ -1,13 +1,9 @@
 class world {
 
     constructor(params) {
-
-        this._dirty = false;
-        this._draw_options = {};
         this._data = [];
         this.width = typeof params.width !== 'undefined' ? params.width : 32;
         this.height = typeof params.height !== 'undefined' ? params.height : 32;
-        this.erosion = typeof params.erosion !== 'undefined' ? params.erosion : 0.20;
         this.seed_moisture = typeof params.seed_moisture !== 'undefined'
         && params.seed_moisture !== null ? params.seed_moisture : this.seed();
         this.seed_elevation = typeof params.seed_elevation !== 'undefined'
@@ -76,13 +72,16 @@ class world {
             for (let y = 0; y < this.width; y++) {
                 let nx = x / this.height - 0.5;
                 let ny = y / this.width - 0.5;
-                let e = (1.00 * noise1(1 * nx, 1 * ny)
+                let e = (1.00 * noise1(nx, ny)
                     + 0.50 * noise1(2 * nx, 2 * ny)
                     + 0.25 * noise1(4 * nx, 4 * ny));
                 e /= (1.00 + 0.50 + 0.25);
-                e = Math.pow(e, this.erosion);
+                // implémentation de la distance au centre pour faire une forme d'île
+                let d = 2 * Math.max(Math.abs(nx), Math.abs(ny));
+                e = (1 + e - d ) / 2;
+                console.log(e);
                 this._data[y][x].e = e;
-                let m = (1.00 * noise2(1 * nx, 1 * ny)
+                let m = (1.00 * noise2(nx, ny)
                     + 0.50 * noise2(2 * nx, 2 * ny)
                     + 0.25 * noise2(4 * nx, 4 * ny));
                 m /= (1+ 0.5 + 0.25);
@@ -134,7 +133,6 @@ world.prototype.draw = function (container) {
         }
         offset_column = !offset_column;
     }
-    this._dirty = false;
     return this;
 }
 

@@ -2,7 +2,7 @@ class Hex {
     constructor(x, y) {
         this.x = x;
         this.y = y;
-        if (Math.random() < 0.05) {
+        if (Math.random() < 0.01) {
             this.cityName = this.getCityName();
         } else {
             this.cityName = null;
@@ -28,13 +28,13 @@ class Hex {
     set_hex_terrain(noiseData, i, j) {
         let elevation = noiseData[i][j].e;
         let moisture = noiseData[i][j].m;
-        if (elevation <= 0.1) {
+        if (elevation <= 0.35) {
             // Ocean
             this.id = 72;
-        } else if (elevation > 0.1 && elevation <= 0.2) {
+        } else if (elevation > 0.35 && elevation <= 0.4) {
             // Mer
             this.id = 68;
-        } else if (elevation > 0.2 && elevation <= 0.5) {
+        } else if (elevation > 0.4 && elevation <= 0.5) {
             if (moisture <= 0.20) {
                 // Desert
                 if (this.cityName != null) {
@@ -135,11 +135,6 @@ class Hex {
         let b = ['don', 'gham', 'gow', 'burgh', 'pool', 'chester', 'ton', 'ford', 'brough', 'bridge', 'coln', 'mouth', 'ter', 'port', 'wich', 'ling', 'field', 'hampton', 'minster', 'bury', 'diff', 'nell', 'head', 'dale', 'ley', 'stoke', 'water', 'mills', 'town', 'ham', 'well', 'by', 'thorne', 'worth', 'brook', 'mont', 'heath', 'ville', 'bourne', 'shire', 'cairn', 'stone', 'hill'];
         let res = a.splice(Math.floor(Math.random() * a.length), 1)[0];
         res += b[Math.floor(Math.random() * b.length)];
-        if (Math.random() < 0.075) {
-            res += '-';
-            if (Math.random() < 0.5) res += 'up'
-            res += 'on-' + a[Math.floor(Math.random() * a.length)];
-        }
         return res;
 
     }
