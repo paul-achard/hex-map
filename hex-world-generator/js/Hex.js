@@ -39,7 +39,11 @@ class Hex {
     }
 
     static direction(direction) {
-        return Hex.directions[direction];
+        var directions = [
+            new Hex(+1, -1, 0), new Hex(+1, 0, -1), new Hex(0, +1, -1),
+            new Hex(-1, +1, 0), new Hex(-1, 0, +1), new Hex(0, -1, +1),
+        ]
+        return directions[direction];
     }
 
     neighbor(direction) {
@@ -106,8 +110,8 @@ class Hex {
         return [coordX, coordY];
     }
 
-    getRandomHex(tab){
-        let index= Math.floor(Math.random() * Math.floor(tab.length));
+    getRandomHex(tab) {
+        let index = Math.floor(Math.random() * Math.floor(tab.length));
         return tab[index];
     }
 
@@ -116,19 +120,19 @@ class Hex {
         let elevation = noiseData[i][j].e;
         let moisture = noiseData[i][j].m;
 
-        let tabDesert =[61,62,67];
-        let tabDesertMontagne = [65,66];
-        let tabPlaineDesertique = [16,17,18,24,26];
-        let tabPlaine = [1,2,7];
-        let tabPlaineRocheuse = [8,9,10,11];
-        let tabLac = [12,13,19];
-        let tabNeige = [48,49,51,52,54,55,56,57];
-        let tabNeigeRocher = [56,57,82];
-        let tabRocherDesertiqueMoins = [32,33,34,35,36,37,38,39,40,41];
-        let tabForet = [3,4,5,6];
-        let tabForetProfonde = [23,25];
-        let tabMontagneBasse = [93,94,50];
-        let tabRocherDesertique = [63,64];
+        let tabDesert = [61, 62, 67];
+        let tabDesertMontagne = [65, 66];
+        let tabPlaineDesertique = [16, 17, 18, 24, 26];
+        let tabPlaine = [1, 2, 7];
+        let tabPlaineRocheuse = [8, 9, 10, 11];
+        let tabLac = [12, 68, 19];
+        let tabNeige = [48, 49, 51, 52, 54, 55, 56, 57];
+        let tabNeigeRocher = [56, 57, 82];
+        let tabRocherDesertiqueMoins = [32, 33, 34, 35, 36, 37, 38, 39, 40, 41];
+        let tabForet = [3, 4, 5, 6];
+        let tabForetProfonde = [23, 25];
+        let tabMontagneBasse = [93, 94, 50];
+        let tabRocherDesertique = [63, 64];
 
         if (elevation <= 0.35) {
             // Ocean
@@ -142,7 +146,7 @@ class Hex {
                 if (this.cityName != null) {
                     this.id = 103;
                 } else {
-                    this.id = this.getRandomHex(tabDesert) ;//63
+                    this.id = this.getRandomHex(tabDesert);//63
                 }
             } else if (moisture > 0.2 && moisture <= 0.4) {
                 // Plaine desertique
@@ -209,7 +213,7 @@ class Hex {
             } else if (moisture > 0.4 && moisture <= 0.8) {
                 // Montagne un peu moins montagne
                 this.id = this.getRandomHex(tabMontagneBasse); //93
-            }else {
+            } else {
                 // Montagne neige
                 if (this.cityName != null) {
                     this.id = 102;
@@ -225,7 +229,8 @@ class Hex {
         CTX.drawImage(HEXTILES_IMAGE, coordHexTile[0] * 32, coordHexTile[1] * 48, 32, 48, coordCanvas.x, coordCanvas.y, 32, 48);
         if (CITY_ID_TAB.includes(this.id)) {
             CTX.font = "20px Arial";
-            CTX.fillText(this.cityName, coordCanvas.x, coordCanvas.y);
+            CTX.fillStyle = "white";
+            CTX.fillText(this.cityName, coordCanvas.x + 16, coordCanvas.y);
         }
     }
 
@@ -238,18 +243,3 @@ class Hex {
 
     }
 }
-
-
-var cube_directions = [
-    new Hex(+1, -1, 0), new Hex(+1, 0, -1), new Hex(0, +1, -1),
-    new Hex(-1, +1, 0), new Hex(-1, 0, +1), new Hex(0, -1, +1),
-]
-
-function cube_direction(direction){
-    return cube_directions[direction]
-}
-
-function cube_neighbor(hex, direction){
-    return hex.add(cube_direction(direction))
-}
-
