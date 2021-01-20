@@ -91,7 +91,7 @@ class world {
                 for (let dir = 0; dir < 6; dir++) {
                     let neighbor = hex.neighbor(dir);
                     if (cost_so_far[neighbor] === undefined) {
-                        cost_so_far[neighbor] = k + 1;
+                        cost_so_far[neighbor] = cost_so_far[hex] + 1;
                         came_from[neighbor] = hex;
                         fringes[k + 1].push(neighbor);
                     }

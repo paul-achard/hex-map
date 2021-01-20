@@ -120,20 +120,6 @@ class Hex {
         let elevation = noiseData[i][j].e;
         let moisture = noiseData[i][j].m;
 
-        let tabDesert = [61, 62, 67];
-        let tabDesertMontagne = [65, 66];
-        let tabPlaineDesertique = [16, 17, 18, 24, 26];
-        let tabPlaine = [1, 2, 7];
-        let tabPlaineRocheuse = [8, 9, 10, 11];
-        let tabLac = [12, 68, 19];
-        let tabNeige = [48, 49, 51, 52, 54, 55, 56, 57];
-        let tabNeigeRocher = [56, 57, 82];
-        let tabRocherDesertiqueMoins = [32, 33, 34, 35, 36, 37, 38, 39, 40, 41];
-        let tabForet = [3, 4, 5, 6];
-        let tabForetProfonde = [23, 25];
-        let tabMontagneBasse = [93, 94, 50];
-        let tabRocherDesertique = [63, 64];
-
         if (elevation <= 0.35) {
             // Ocean
             this.id = 72;
@@ -146,7 +132,7 @@ class Hex {
                 if (this.cityName != null) {
                     this.id = 103;
                 } else {
-                    this.id = this.getRandomHex(tabDesert);//63
+                    this.id = this.getRandomHex(DESERT_ID_TAB);//63
                 }
             } else if (moisture > 0.2 && moisture <= 0.4) {
                 // Plaine desertique
@@ -206,7 +192,7 @@ class Hex {
         } else {
             if (moisture <= 0.20) {
                 // Montagne Desertique
-                this.id = this.getRandomHex(tabDesertMontagne); //66
+                this.id = this.getRandomHex(HILL_DESERT_ID_TAB); //66
             } else if (moisture > 0.2 && moisture <= 0.4) {
                 // Foret profonde
                 this.id = this.getRandomHex(tabForetProfonde);//23
@@ -241,5 +227,9 @@ class Hex {
         res += b[Math.floor(Math.random() * b.length)];
         return res;
 
+    }
+
+    getCost() {
+        if (tabD this.id)
     }
 }
