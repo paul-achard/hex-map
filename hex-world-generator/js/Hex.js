@@ -128,11 +128,11 @@ class Hex {
             this.id = 68;
         } else if (elevation > 0.4 && elevation <= 0.5) {
             if (moisture <= 0.20) {
-                // Desert
+                // Plage
                 if (this.cityName != null) {
                     this.id = 103;
                 } else {
-                    this.id = this.getRandomHex(DESERT_ID_TAB);//63
+                    this.id = this.getRandomHex(PLAGE_ID_TAB);//63
                 }
             } else if (moisture > 0.2 && moisture <= 0.4) {
                 // Plaine desertique
