@@ -3,15 +3,18 @@ class Hex {
         this.q = q;
         this.r = r;
         this.s = s;
+        this.cost = null;
         if (Math.round(q + r + s) !== 0) {
             throw "q + r + s must be 0";
         }
         if (Math.random() < 0.01) {
             this.cityName = this.getCityName();
+            this.cost = 0;
         } else {
             this.cityName = null;
         }
         this.id = null;
+
     }
 
     toString() {
@@ -115,28 +118,28 @@ class Hex {
         return tab[index];
     }
 
-    set_hex_terrain(noiseData, i, j) {
-
-        let elevation = noiseData[i][j].e;
-        let moisture = noiseData[i][j].m;
-
+    set_hex_terrain(elevation, moisture) {
         if (elevation <= 0.35) {
             // Ocean
             this.id = 72;
+            this.cost = 100;
         } else if (elevation > 0.35 && elevation <= 0.4) {
             // Mer
             this.id = 68;
+            this.cost = 10;
         } else if (elevation > 0.4 && elevation <= 0.5) {
             if (moisture <= 0.20) {
                 // Plage
                 if (this.cityName != null) {
                     this.id = 103;
                 } else {
-                    this.id = this.getRandomHex(PLAGE_ID_TAB);//63
+                    this.id = this.getRandomHex(PLAGE_ID_TAB);
+                    this.cost = 1;
                 }
             } else if (moisture > 0.2 && moisture <= 0.4) {
                 // Plaine desertique
-                this.id = this.getRandomHex(PLAINE_DESERTIQUE_ID_TAB);//17
+                this.id = this.getRandomHex(PLAINE_DESERTIQUE_ID_TAB);
+                this.cost = 1;
             } else if (moisture > 0.4 && moisture <= 0.6) {
                 // Plaine
                 if (this.cityName != null) {
@@ -144,16 +147,19 @@ class Hex {
                     this.id = 97;
                 } else {
                     this.id = this.getRandomHex(PLAINE_ID_TAB);
+                    this.cost = 1;
                 }
             } else if (moisture > 0.6 && moisture <= 0.8) {
                 // Lac
-                this.id = this.getRandomHex(LAC_ID_TAB);//19
+                this.id = this.getRandomHex(LAC_ID_TAB);
+                this.cost = 5;
             } else {
                 // neige
                 if (this.cityName != null) {
                     this.id = 100;
                 } else {
-                    this.id = this.getRandomHex(NEIGE_ID_TAB);//53
+                    this.id = this.getRandomHex(NEIGE_ID_TAB);
+                    this.cost = 1;
                 }
             }
         } else if (elevation > 0.5 && elevation <= 0.7) {
@@ -163,48 +169,57 @@ class Hex {
                     this.id = 104;
                 } else {
                     this.id = this.getRandomHex(ROCHER_DESERTIQUE_ID_TAB);
+                    this.cost = 5;
                 }
             } else if (moisture > 0.2 && moisture <= 0.4) {
                 // Rocher desertique mais un peu moins desertique ta vu
                 if (this.cityName != null) {
                     this.id = 103;
                 } else {
-                    this.id = this.getRandomHex(ROCHER_DESERTIQUE_MOINS_ID_TAB); //41
+                    this.id = this.getRandomHex(ROCHER_DESERTIQUE_MOINS_ID_TAB);
+                    this.cost = 5;
                 }
             } else if (moisture > 0.4 && moisture <= 0.6) {
                 // Plaine rocheuse
-                this.id = this.getRandomHex(PLAINE_ROCHEUSE_ID_TAB); //8
+                this.id = this.getRandomHex(PLAINE_ROCHEUSE_ID_TAB);
+                this.cost = 5;
             } else if (moisture > 0.6 && moisture <= 0.8) {
                 // Foret
                 if (this.cityName != null) {
                     this.id = 97;
                 } else {
-                    this.id = this.getRandomHex(FORET_ID_TAB); //5
+                    this.id = this.getRandomHex(FORET_ID_TAB);
+                    this.cost = 3;
                 }
             } else {
                 // neige rocher
                 if (this.cityName != null) {
                     this.id = 101;
                 } else {
-                    this.id = this.getRandomHex(NEIGE_ROCHER_ID_TAB); //56
+                    this.id = this.getRandomHex(NEIGE_ROCHER_ID_TAB);
+                    this.cost = 8;
                 }
             }
         } else {
             if (moisture <= 0.20) {
                 // Montagne Desertique
-                this.id = this.getRandomHex(HILL_DESERT_ID_TAB); //66
+                this.id = this.getRandomHex(HILL_DESERT_ID_TAB);
+                this.cost = 5;
             } else if (moisture > 0.2 && moisture <= 0.4) {
                 // Foret profonde
-                this.id = this.getRandomHex(FORET_PROFONDE_ID_TAB);//23
+                this.id = this.getRandomHex(FORET_PROFONDE_ID_TAB);
+                this.cost = 4;
             } else if (moisture > 0.4 && moisture <= 0.8) {
                 // Montagne un peu moins montagne
-                this.id = this.getRandomHex(MONTAGNE_BASSE_ID_TAB); //93
+                this.id = this.getRandomHex(MONTAGNE_BASSE_ID_TAB);
+                this.cost = 8;
             } else {
                 // Montagne neige
                 if (this.cityName != null) {
                     this.id = 102;
                 } else {
                     this.id = 82;
+                    this.cost = 10;
                 }
             }
         }
@@ -226,6 +241,5 @@ class Hex {
         let res = a.splice(Math.floor(Math.random() * a.length), 1)[0];
         res += b[Math.floor(Math.random() * b.length)];
         return res;
-
     }
 }

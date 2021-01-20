@@ -4,8 +4,8 @@ document.addEventListener("DOMContentLoaded", function () {
     let hex_size = 28;
     if (width > 0 && hex_size > 0 && height > 0) {
         let new_world = new world({
-            width: 30,
-            height: 30,
+            width: 31,
+            height: 31,
         }).draw();
     } else {
         alert('Incorrect parameters!');

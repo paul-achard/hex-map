@@ -2,8 +2,9 @@ class world {
 
     constructor(params) {
         this._data = [];
-        this.width = typeof params.width !== 'undefined' ? params.width : 32;
-        this.height = typeof params.height !== 'undefined' ? params.height : 32;
+        this.dict = {};
+        this.width = typeof params.width !== 'undefined' ? params.width : 31;
+        this.height = typeof params.height !== 'undefined' ? params.height : 31;
         this.seed_moisture = this.seed();
         this.seed_elevation = this.seed();
         this._create_array();
@@ -77,35 +78,43 @@ class world {
      * @returns {{cost_so_far: {}, came_from: {}}}
      */
     breadthFirstSearch(start, objective) {
+        let frontier = new PriorityQueue();
+        frontier.enqueue(start, 0);
         let cost_so_far = {};
         cost_so_far[start] = 0;
         let came_from = {};
-        came_from[start] = null;
-        let fringes = [[start]];
-        for (let k = 0; fringes[k].length > 0; k++) {
-            fringes[k + 1] = [];
-            for (let hex of fringes[k]) {
-                if (hex.toString() === objective.toString()) {
+        came_from[start] = start;
+
+        while (!frontier.isEmpty()) {
+           let current = frontier.dequeue().element;
+                if (current.toString() === objective.toString()) {
                     return {cost_so_far, came_from};
                 }
                 for (let dir = 0; dir < 6; dir++) {
-                    let neighbor = hex.neighbor(dir);
-                    if (cost_so_far[neighbor] === undefined) {
-                        cost_so_far[neighbor] = cost_so_far[hex] + 1;
-                        came_from[neighbor] = hex;
-                        fringes[k + 1].push(neighbor);
+                    let neighbor = current.neighbor(dir);
+                    let id = current.toString();
+                    let hexObject = this.dict[id];
+                    let cost = 100;
+                    if (hexObject !== undefined) {
+                        cost = hexObject.cost;
+                    }
+                    let newCost = cost_so_far[current] + cost;
+                    if (cost_so_far[neighbor] === undefined || newCost < cost_so_far[neighbor]) {
+                        cost_so_far[neighbor] = newCost;
+                        frontier.enqueue(neighbor, newCost);
+                        came_from[neighbor] = current;
                     }
                 }
-            }
+
         }
     }
 
-    drawRoads(dict) {
+    drawRoads() {
         // On cherche toutes les villes
         let cityTab = [];
-        for (const id in dict) {
-            if (CITY_ID_TAB.includes(dict[id].id)) {
-                cityTab.push(dict[id]);
+        for (const id in this.dict) {
+            if (CITY_ID_TAB.includes(this.dict[id].id)) {
+                cityTab.push(this.dict[id]);
             }
         }
         console.log(cityTab);
@@ -116,7 +125,7 @@ class world {
             cityTab.forEach(cityTile2 => {
                 // on vérifie que la route ne soit pas déja déssinée
                 // si aucune route n'a été faite
-                if(roadsDrawn.length === 0){
+                if (roadsDrawn.length === 0) {
                     isDrawn = false;
                 } else {
                     isDrawn = false;
@@ -134,6 +143,7 @@ class world {
                         path.push(current);
                         current = breadthFirstSearch.came_from[current];
                     }
+                    path.push(cityTile);
 
                     // On dessine la route
                     CTX.beginPath();
@@ -166,35 +176,34 @@ class world {
     }
 
     draw() {
-        let dict = {};
-        for (let i = 0; i < this.width; ++i) {
-            for (let j = 0; j < this.height; ++j) {
+        for (let i = 0; i < this.height; ++i) {
+            // check si pair ou impair
+            let j = 0;
+            while (j < this.width) {
                 let offset_coord = {x: null, y: null};
                 offset_coord.x = i - Math.floor(this.width / 2);
                 offset_coord.y = j - Math.floor(this.height / 2);
                 let hex = OffsetCoord.qoffsetToCube(OffsetCoord.EVEN, {row: offset_coord.x, col: offset_coord.y});
-                hex.set_hex_terrain(this._data, i, j);
-                dict["i:" + i + "j:" + j] = hex;
-            }
-        }
-
-        for (let i = 0; i < this.height; i++) {
-            let j = 0;
-            while (j < this.width) {
-                let hex = dict["i:" + i + "j:" + j];
+                hex.set_hex_terrain(this._data[i][j].e, this._data[i][j].m);
                 let coordCanvas = LAYOUT.hexToPixel(hex)
-                hex.printHex(coordCanvas);
+                hex.printHex(coordCanvas)
+                this.dict[hex.toString()] = hex;
                 j = j + 2;
             }
             j = 1;
             while (j < this.width) {
-                let hex = dict["i:" + i + "j:" + j];
+                let offset_coord = {x: null, y: null};
+                offset_coord.x = i - Math.floor(this.width / 2);
+                offset_coord.y = j - Math.floor(this.height / 2);
+                let hex = OffsetCoord.qoffsetToCube(OffsetCoord.EVEN, {row: offset_coord.x, col: offset_coord.y});
+                hex.set_hex_terrain(this._data[i][j].e, this._data[i][j].m);
                 let coordCanvas = LAYOUT.hexToPixel(hex)
-                hex.printHex(coordCanvas);
+                hex.printHex(coordCanvas)
+                this.dict[hex.toString()] = hex;
                 j = j + 2;
             }
         }
-        this.drawRoads(dict);
+        this.drawRoads();
         return this;
     }
 }
