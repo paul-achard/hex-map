@@ -125,8 +125,15 @@ class Hex {
             this.cost = 100;
         } else if (elevation > 0.35 && elevation <= 0.4) {
             // Mer
-            this.id = 68;
-            this.cost = 10;
+            let alea = Math.floor(Math.random() * Math.floor(50));
+            if (alea  === 1){
+                this.id = 81;
+                this.cost = 100;
+            }
+            else {
+                this.id = 68;
+                this.cost = 10;
+            }
         } else if (elevation > 0.4 && elevation <= 0.5) {
             if (moisture <= 0.20) {
                 // Plage
