@@ -55,6 +55,8 @@ function initTabHex(){
 ID_TAB = initTabHex();
 HEXTILES_IMAGE = new Image();
 HEXTILES_IMAGE.src = '../img/hextiles.png';
+RIVER_PATTERN = new Image();
+RIVER_PATTERN.src = '../img/river.png';
 CANVAS = document.getElementById('canvas-map')
 CTX = CANVAS.getContext('2d');
 CTX.textAlign = "center";
@@ -70,6 +72,6 @@ NEIGE_ROCHER_ID_TAB = [56, 57, 82];
 ROCHER_DESERTIQUE_MOINS_ID_TAB = [32, 33, 34, 35, 36, 37, 38, 39, 40, 41];
 FORET_ID_TAB = [3, 4, 5, 6];
 FORET_PROFONDE_ID_TAB = [23, 25];
-MONTAGNE_BASSE_ID_TAB = [93, 94, 50];
+MONTAGNE_BASSE_ID_TAB = [93, 94, 82];
 ROCHER_DESERTIQUE_ID_TAB = [63, 64, 67];
 LAYOUT = new Layout(Layout.flat, new Point(16, 16), new Point(CANVAS.width / 2, CANVAS.height / 2));

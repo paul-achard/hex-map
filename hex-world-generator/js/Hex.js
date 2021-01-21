@@ -4,14 +4,13 @@ class Hex {
         this.r = r;
         this.s = s;
         this.cost = null;
+        this.cityName = null;
         if (Math.round(q + r + s) !== 0) {
             throw "q + r + s must be 0";
         }
         if (Math.random() < 0.01) {
             this.cityName = this.getCityName();
             this.cost = 0;
-        } else {
-            this.cityName = null;
         }
         this.id = null;
 
@@ -200,7 +199,11 @@ class Hex {
         }
     }
 
-    printHex(coordCanvas) {
+    /**
+     * Dessine une tuile en fonction de ses coordonées
+     * @param coordCanvas
+     */
+    drawHex(coordCanvas) {
         let coordHexTile = this.getCoord(this.id);
         CTX.drawImage(HEXTILES_IMAGE, coordHexTile[0] * 32, coordHexTile[1] * 48, 32, 48, coordCanvas.x, coordCanvas.y, 32, 48);
         if (CITY_ID_TAB.includes(this.id)) {
@@ -211,7 +214,7 @@ class Hex {
     }
 
     /**
-     *
+     * Retourne un nom de ville aléatoire
      * @returns {string}
      */
     getCityName() {
