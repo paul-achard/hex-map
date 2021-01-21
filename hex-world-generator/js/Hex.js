@@ -29,18 +29,6 @@ class Hex {
         return new Hex(this.q - b.q, this.r - b.r, this.s - b.s);
     }
 
-    scale(k) {
-        return new Hex(this.q * k, this.r * k, this.s * k);
-    }
-
-    rotateLeft() {
-        return new Hex(-this.s, -this.q, -this.r);
-    }
-
-    rotateRight() {
-        return new Hex(-this.r, -this.s, -this.q);
-    }
-
     static direction(direction) {
         var directions = [
             new Hex(+1, -1, 0), new Hex(+1, 0, -1), new Hex(0, +1, -1),
@@ -51,10 +39,6 @@ class Hex {
 
     neighbor(direction) {
         return this.add(Hex.direction(direction));
-    }
-
-    diagonalNeighbor(direction) {
-        return this.add(Hex.diagonals[direction]);
     }
 
     len() {
@@ -82,22 +66,6 @@ class Hex {
         return new Hex(qi, ri, si);
     }
 
-    lerp(b, t) {
-        return new Hex(this.q * (1.0 - t) + b.q * t, this.r * (1.0 - t) + b.r * t, this.s * (1.0 - t) + b.s * t);
-    }
-
-    linedraw(b) {
-        var N = this.distance(b);
-        var a_nudge = new Hex(this.q + 1e-06, this.r + 1e-06, this.s - 2e-06);
-        var b_nudge = new Hex(b.q + 1e-06, b.r + 1e-06, b.s - 2e-06);
-        var results = [];
-        var step = 1.0 / Math.max(N, 1);
-        for (var i = 0; i <= N; i++) {
-            results.push(a_nudge.lerp(b_nudge, step * i).round());
-        }
-        return results;
-    }
-
     //Find return undefined quand il ne trouve pas la valeur
     getCoord() {
         let found;
@@ -118,7 +86,7 @@ class Hex {
         return tab[index];
     }
 
-    set_hex_terrain(elevation, moisture) {
+    setHexTerrain(elevation, moisture) {
         if (elevation <= 0.35) {
             // Ocean
             this.id = 72;
@@ -242,6 +210,10 @@ class Hex {
         }
     }
 
+    /**
+     *
+     * @returns {string}
+     */
     getCityName() {
         let a = ['Lon', 'Birmin', 'Glas', 'Edin', 'Liver', 'Man', 'Brigh', 'Ox', 'Middles', 'Cam', 'Lin', 'Ply', 'Ex', 'Nor', 'Stir', 'Shef', 'Sout', 'West', 'Canter', 'Car', 'Brack', 'Wimble', 'Rother', 'Farn', 'Yar', 'Swin', 'Notting', 'Stoke', 'Atter', 'Castle', 'Oaken', 'Bel', 'Wil', 'Ash', 'Berk', 'Grind', 'Horn', 'Barn', 'Clap', 'Auchen', 'Barr', 'Maid', 'Dun'];
         let b = ['don', 'gham', 'gow', 'burgh', 'pool', 'chester', 'ton', 'ford', 'brough', 'bridge', 'coln', 'mouth', 'ter', 'port', 'wich', 'ling', 'field', 'hampton', 'minster', 'bury', 'diff', 'nell', 'head', 'dale', 'ley', 'stoke', 'water', 'mills', 'town', 'ham', 'well', 'by', 'thorne', 'worth', 'brook', 'mont', 'heath', 'ville', 'bourne', 'shire', 'cairn', 'stone', 'hill'];

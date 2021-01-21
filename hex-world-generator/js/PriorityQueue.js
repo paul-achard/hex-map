@@ -7,7 +7,6 @@ class QElement {
 
 class PriorityQueue {
 
-    // An array is used to implement priority
     constructor() {
         this.items = [];
     }
@@ -49,20 +48,10 @@ class PriorityQueue {
         return this.items.shift();
     }
 
-    // front function
-    front() {
-        // returns the highest priority element
-        // in the Priority queue without removing it.
-        if (this.isEmpty())
-            return "No elements in Queue";
-        return this.items[0];
-    }
-
     // isEmpty function
     isEmpty() {
         // return true if the queue is empty.
         return this.items.length === 0;
     }
 
-    // printPQueue()
 }

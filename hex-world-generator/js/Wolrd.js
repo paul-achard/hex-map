@@ -7,16 +7,24 @@ class world {
         this.height = typeof params.height !== 'undefined' ? params.height : 31;
         this.seed_moisture = this.seed();
         this.seed_elevation = this.seed();
-        this._create_array();
-        this._generate();
+        this.createArray();
+        this.generate();
         return this;
     }
 
+    /**
+     *
+     * @returns {number}
+     */
     seed() {
         return Math.random() * (2147483646 - 1) + 1;
     }
 
-    _create_array() {
+    /**
+     * Créer le tableau a deux dimensions qui contiendra le bruit
+     * @returns {world}
+     */
+    createArray() {
         this._data = new Array(this.width);
         for (let i = 0; i < this.width; i += 1) {
             this._data[i] = new Array(this.height);
@@ -32,7 +40,11 @@ class world {
         return this;
     }
 
-    _generate() {
+    /**
+     * Genere un tableau contenant l'élévation et la moisture
+     * @returns {world}
+     */
+    generate() {
         let rng1 = PM_PRNG.create(this.seed_elevation);
         let rng2 = PM_PRNG.create(this.seed_moisture);
         let gen1 = new SimplexNoise(rng1.nextDouble.bind(rng1));
@@ -77,7 +89,7 @@ class world {
      * @param objective : Hex sur lequel le chemin doit arriver
      * @returns {{cost_so_far: {}, came_from: {}}}
      */
-    breadthFirstSearch(start, objective) {
+    pathSearch(start, objective) {
         let frontier = new PriorityQueue();
         frontier.enqueue(start, 0);
         let cost_so_far = {};
@@ -136,7 +148,7 @@ class world {
                     })
                 }
                 if (cityTile !== cityTile2 && !isDrawn) {
-                    let breadthFirstSearch = this.breadthFirstSearch(cityTile, cityTile2);
+                    let breadthFirstSearch = this.pathSearch(cityTile, cityTile2);
                     let current = cityTile2;
                     let path = [];
                     while (current !== cityTile) {
@@ -147,6 +159,7 @@ class world {
 
                     // On dessine la route
                     CTX.beginPath();
+                    CTX.setLineDash([5, 15]);
                     for (let i = 0; i < (path.length - 1); i++) {
                         let coord = LAYOUT.hexToPixel(path[i]);
                         // on utilise moveTo uniquement lors de la première itération
@@ -184,7 +197,7 @@ class world {
                 offset_coord.x = i - Math.floor(this.width / 2);
                 offset_coord.y = j - Math.floor(this.height / 2);
                 let hex = OffsetCoord.qoffsetToCube(OffsetCoord.EVEN, {row: offset_coord.x, col: offset_coord.y});
-                hex.set_hex_terrain(this._data[i][j].e, this._data[i][j].m);
+                hex.setHexTerrain(this._data[i][j].e, this._data[i][j].m);
                 let coordCanvas = LAYOUT.hexToPixel(hex)
                 hex.printHex(coordCanvas)
                 this.dict[hex.toString()] = hex;
@@ -196,7 +209,7 @@ class world {
                 offset_coord.x = i - Math.floor(this.width / 2);
                 offset_coord.y = j - Math.floor(this.height / 2);
                 let hex = OffsetCoord.qoffsetToCube(OffsetCoord.EVEN, {row: offset_coord.x, col: offset_coord.y});
-                hex.set_hex_terrain(this._data[i][j].e, this._data[i][j].m);
+                hex.setHexTerrain(this._data[i][j].e, this._data[i][j].m);
                 let coordCanvas = LAYOUT.hexToPixel(hex)
                 hex.printHex(coordCanvas)
                 this.dict[hex.toString()] = hex;
