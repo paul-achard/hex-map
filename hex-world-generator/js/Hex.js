@@ -92,8 +92,7 @@ class Hex {
             this.cost = 100;
         } else if (elevation > 0.35 && elevation <= 0.4) {
             // Mer
-            let alea = Math.floor(Math.random() * Math.floor(50));
-            if (alea  === 1){
+            if (Math.random() < 0.01){
                 this.id = 81;
                 this.cost = 100;
             }

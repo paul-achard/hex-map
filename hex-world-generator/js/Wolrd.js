@@ -123,8 +123,7 @@ class world {
 
     /**
      * Implémentation du path finding pour les rivieres
-     * @param start : Hex de début de chemin
-     * @param objective : Hex sur lequel le chemin doit arriver
+     * @param start : Point de spawn de la rivière
      * @returns {{cost_so_far: {}, came_from: {}}}
      */
     riverSearch(start) {
@@ -173,8 +172,8 @@ class world {
                 }
 
                 // On dessine la rivière
-                CTX.setLineDash([]);
                 CTX.beginPath();
+                CTX.setLineDash([]);
                 CTX.strokeStyle = CTX.createPattern(RIVER_PATTERN, 'repeat');
                 CTX.lineWidth = 6;
                 for (let i = 0; i < (path.length - 1); i++) {
@@ -190,6 +189,7 @@ class world {
                     CTX.quadraticCurveTo(coordNext.x + 16 + getRandomArbitrary(-10, 10), coordNext.y + 24 + getRandomArbitrary(-10, 10), coordNext.x + 16, coordNext.y + 24)
                     CTX.stroke();
                 }
+                CTX.closePath();
             }
         }
     }
@@ -252,6 +252,7 @@ class world {
                     // on sauvegarde la route que l'on vient de faire
                     let roadId = cityTile.toString() + " to " + cityTile2.toString();
                     roadsDrawn.push(roadId);
+                    CTX.closePath();
                 }
             })
         })
