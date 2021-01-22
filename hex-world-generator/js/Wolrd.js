@@ -262,7 +262,7 @@ class world {
      * Dessine le monde
      *
      */
-    async draw() {
+    draw() {
         for (let i = 0; i < this.height; ++i) {
             // check si pair ou impair
             let j = 0;
